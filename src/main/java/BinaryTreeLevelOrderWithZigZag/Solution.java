@@ -2,13 +2,22 @@ package BinaryTreeLevelOrderWithZigZag;
 
 import org.junit.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Stack;
+import java.util.concurrent.TimeUnit;
 
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ * int val;
+ * TreeNode left;
+ * TreeNode right;
+ * TreeNode(int x) { val = x; }
+ * }
+ */
 public class Solution {
-
-    Queue<TreeNode> queue = new LinkedList<>();
-    Queue<Integer> level = new LinkedList<>();
-    boolean turn = true;
 
     public class TreeNode {
         int val;
@@ -20,93 +29,77 @@ public class Solution {
         }
     }
 
-    public List<List<Integer>> levelOrder(TreeNode root) {
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
 
         if (root == null) return new ArrayList<>();
         List<List<Integer>> result = new ArrayList<>();
-        queue.add(root);
-        level.add(1);
-        List<Integer> me = new ArrayList<>();
-        int preLevel = 1;
-        while (!queue.isEmpty()) {
+        Stack<TreeNode> odd = new Stack();//left->right
+        Stack<TreeNode> even = new Stack<>();//right-left
+        odd.add(root);
+        boolean should_use_odd = true;
+        List<Integer> temp = new ArrayList<>();
+        while (!odd.isEmpty() || !even.isEmpty()) {
 
-            TreeNode now = queue.poll();
-            Integer layer = level.poll();
+            if (should_use_odd) {
 
-            if (turn) {
-                if (now.left != null) {
-                    queue.add(now.left);
-                    level.add(layer + 1);
+                TreeNode top = odd.pop();
+
+                if (top.left != null) even.add(top.left);
+                if (top.right != null) even.add(top.right);
+                temp.add(top.val);
+                if (odd.empty()) {
+                    result.add(new ArrayList<>(temp));
+                    temp.clear();
+                    should_use_odd = false;
                 }
-                if (now.right != null) {
-                    queue.add(now.right);
-                    level.add(layer + 1);
 
-                }
-                turn = false;
+
             } else {
-                turn = true;
-                if (now.right != null) {
-                    queue.add(now.right);
-                    level.add(layer + 1);
 
+                TreeNode top = even.pop();
+
+                if (top.right != null) odd.add(top.right);
+                if (top.left != null) odd.add(top.left);
+                temp.add(top.val);
+                if (even.empty()) {
+                    result.add(new ArrayList<>(temp));
+                    temp.clear();
+                    should_use_odd = true;
                 }
-                if (now.left != null) {
-                    queue.add(now.left);
-                    level.add(layer + 1);
-                }
+
 
             }
 
 
-            if (layer == preLevel) {
-                me.add(now.val);
-
-            } else {
-
-                result.add(me);
-                preLevel = layer;
-                me = new ArrayList<>();
-                me.add(now.val);
-            }
         }
 
-        if (me.size() != 0)
-            result.add(me);
+
         return result;
-
-
     }
+
     @Test
-    public void test()
-    {
-        TreeNode head = new TreeNode(3);
+    public void test() {
 
-        TreeNode b = new TreeNode(9);
-        TreeNode b1 = new TreeNode(10);
-        TreeNode b2 = new TreeNode(11);
+        TreeNode root = new TreeNode(3);
+        TreeNode leftchild = new TreeNode(9);
+        TreeNode rightchild = new TreeNode(20);
+        root.left = leftchild;
+        root.right = rightchild;
 
 
-        TreeNode c = new TreeNode(20);
+        TreeNode ll = new TreeNode(4);
+        TreeNode rr = new TreeNode(5);
+        ll.left = ll.right = rr.left = rr.right = null;
+        leftchild.left = ll;
+        leftchild.right = rr;
 
-        TreeNode d = new TreeNode(15);
-        TreeNode e = new TreeNode(7);
 
-        head.left = b;
-        head.right =c;
-        b.left = b1;
-        b.right=b2;
-
-        b1.left = b1.right = null;
-        b2.left = b2.right = null;
-        c.left  = d;
-        c.right = e;
-
-        d.left = d.right = e.left = e.right = null;
-
-        List<List<Integer>> result = levelOrder(head);
-        System.out.println(Arrays.deepToString(result.toArray()));
-
+        TreeNode l = new TreeNode(15);
+        TreeNode r = new TreeNode(7);
+        l.left = l.right = r.left = r.right = null;
+        rightchild.left = l;
+        rightchild.right = r;
+        List list = zigzagLevelOrder(root);
+        System.out.println(Arrays.deepToString(list.toArray()));
     }
-
 }

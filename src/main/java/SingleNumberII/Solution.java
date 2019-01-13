@@ -57,6 +57,6 @@ public class Solution {
 //
 //        }
         //    System.out.println();
-        System.out.println(singleNumber(new int[]{-3,-3,233,-3}));
+        System.out.println(singleNumber(new int[]{-3,-3,2,-3}));
     }
 }
