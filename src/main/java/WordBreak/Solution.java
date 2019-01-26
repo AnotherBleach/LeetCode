@@ -60,14 +60,37 @@ public class Solution {
 
     }
 
-    @Test
-    public void test() {
+    public boolean calc3(String s, List<String> wordDict) {
 
-        List<String> wordDict = new ArrayList<>();
-        wordDict.add("cats");
-        wordDict.add("dog");
-        wordDict.add("sand");
-        wordDict.add("and");
-        System.out.println(calc2("catsand", wordDict));
+        boolean[] f = new boolean[s.length()];
+        f[0] = wordDict.contains(s.substring(0, 0 + 1));
+        for (int i = 1; i < s.length(); i++) {
+
+            if (wordDict.contains(s.substring(0, i + 1))) {
+                f[i] = true;
+                continue;
+            }
+            for (int j = 0; j < i; j++) {
+
+                if (f[j] && wordDict.contains(s.substring(j + 1, i + 1))) {
+                    f[i] = true;
+                    break;
+                }
+            }
+
+
+        }
+        return f[s.length() - 1];
+
     }
-}
+        @Test
+        public void test () {
+
+            List<String> wordDict = new ArrayList<>();
+            wordDict.add("cats");
+            wordDict.add("dog");
+            wordDict.add("sand");
+            wordDict.add("and");
+            System.out.println(calc2("catsand", wordDict));
+        }
+    }
