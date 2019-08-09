@@ -1,0 +1,9 @@
+syntax = "proto2";
+option java_package = "ProtoBufTest";
+option java_outer_classname = "TeacherSerializer";
+message Teacher {
+    required int32 id=1;
+    required string name=2;
+    repeated string hobbies=3;
+
+}

@@ -1,9 +1,14 @@
 package BitMapSort;
 
+import Bonus.Sanlie;
+
 import java.util.Scanner;
 
-public class Main {
+public class Main{
     public static void main(String[] args) {
+        Sanlie sanlie = new Sanlie();
+
+
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
 
